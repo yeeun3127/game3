@@ -19,17 +19,42 @@ const choice = {
   paper : {
     name:"Paper",
     img : "https://blog.kakaocdn.net/dn/bmjB2s/btqXHhp6kpG/TH14W4U612SxKo9uuR2sB0/img.png"
-  }
-}
+  },
+};
 function App() {
-  let [userSelect,setUserSelect] = useState(null)
+  const [userSelect,setUserSelect] = useState(null);
+  const [computerSelect,setComputerSelect]=useState(null);
+  const [result, setResult] = useState("");
   const play = (userChoice) => {
-    setUserSelect(choice[userChoice])
+    setUserSelect(choice[userChoice]);
+    let computerChoice = randomChoice();
+    setComputerSelect(computerChoice);
+    setResult(judgement(choice[userChoice],computerChoice));
+  };
+
+  const judgement = (user, computer) => {
+    if (user.name == computer.name){
+      return "tie"
+    }else if(user.name == "Rock")return  computer.name=="Scissors"?"win":"lose"
+    else if (user.name == "Scissors")
+      return computer.name == "Paper" ? "win" : "lose";
+    else if (user.name == "Paper") return  computer == "Rock" ? "win" : "lose";
+
+  };
+
+  const randomChoice = ()=> {
+    let itemArray = Object.keys(choice);//객체에 키값만 뽑아서 어레이로 만들어주는 함수다.
+    console.log("item array", itemArray);
+    let randomItem = Math.floor(Math.random() * itemArray.length);
+    console.log("random value", randomItem);
+    let final = itemArray[randomItem];
+    return choice[final];
   }
   return (
       <div>
         <div className="main">
-          <Box title="You" item={userSelect}/>
+          <Box title="You" item={userSelect} result={result}/>
+          <Box title="Computer" item={computerSelect} result={result}/>
         </div>
         <div className="choice-button">
           <button onClick={() => play("scissors")}>가위</button>
